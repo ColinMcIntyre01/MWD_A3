@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import Deck from "./components/Deck";
-import Controls from "./components/Controls";
+import Deck from "./Components/Deck";
+import Controls from "./Components/Controls";
 import './App.css';
 
 const suits = ["♥", "♦", "♣", "♠"];
@@ -15,6 +15,27 @@ function App() {
 const [deck, setDeck] = useState(createDeck());
 const [drawnCards, setDrawnCards] = useState([]);
 const [pickedCard, setPickedCard] = useState(null);
+
+
+const handleDeal =(n) =>{
+
+const newDeck = createDeck();
+setDeck(newDeck);
+const newCards = [];
+for (let i = 0; i < n; i++) {
+  const index = Math.floor(Math.random() * newDeck.length);
+  newCards.push(newDeck[index]);
+}
+setDrawnCards(newCards);
+};
+
+const handleReset = () => {
+
+setDeck(createDeck());
+setDrawnCards({});
+setPickedCard(null);
+
+};
 
 
 }
