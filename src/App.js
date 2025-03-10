@@ -12,8 +12,10 @@ const createDeck = () => {
 
 function App() {
  
+const [deck, setDeck] = useState(createDeck());
+const [drawnCards, setDrawnCards] = useState([]);
+const [pickedCard, setPickedCard] = useState(null);
 
-  
 
 }
 
