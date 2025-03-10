@@ -2,7 +2,7 @@ import React from "react";
 import Card from "./Card";
 import "./Deck.css";
 
-const Deck = ({Deck, drawnCards, onPick, pickedCard})=>{
+const Deck = ({deck, drawnCards, onPick, pickedCard})=>{
 
 return(
 <div className="deck-container">
