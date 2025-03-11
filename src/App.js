@@ -37,6 +37,16 @@ setPickedCard(null);
 
 };
 
+const handlePick = (card) => {
+  if (pickedCard) {
+    setDrawnCards(drawnCards.map((c) => (c === pickedCard ? card : c === card ? pickedCard : c)));
+    setPickedCard(null);
+  } else {
+    setPickedCard(card);
+  }
+};
+
+
 
 const handleToss = () => {
 
@@ -55,6 +65,23 @@ const handleWildcard = () => {
   const randomValue = values[Math.floor(Math.random() * values.length)];
   setDrawnCards([...drawnCards, { suit: randomSuit, value: randomValue }]);
 };
+
+return(
+<div className="app">
+  <h1>Cards App</h1>
+  <Deck deck={deck} drawnCards={drawnCards} onPick={handlePick} pickedCard={pickedCard}/>
+  <Controls
+    deal={handleDeal}
+    reset={handleReset}
+    toss={handleToss}
+    regroup={handleRegroup}
+    addWildcard={handleWildcard}
+  />
+
+</div>
+
+
+);
 
 }
 
