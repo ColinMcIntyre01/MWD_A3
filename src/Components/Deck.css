@@ -1,0 +1,35 @@
+.deck {
+    width: 80px;  
+    height: 120px; 
+    background: repeating-linear-gradient(
+        45deg,
+        darkgray,
+        darkgray 10px,
+        gray 10px,
+        gray 20px
+    );
+    margin: 20px auto; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-weight: bold;
+    color: white;
+    border-radius: 8px;
+    box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    font-size: 1.2em;
+    position: relative;
+}
+
+.deck::after {
+    content: "";
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    width: 76px;
+    height: 116px;
+    background: darkgray;
+    border-radius: 8px;
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}

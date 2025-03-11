@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Deck from "./Components/Deck";
 import Controls from "./Components/Controls";
+import "./Components/Card";
 import './App.css';
 
 const suits = ["♥", "♦", "♣", "♠"];

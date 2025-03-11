@@ -1,0 +1,40 @@
+.controls {
+    margin-top: 20px;
+  }
+  
+  .controls button {
+    margin: 0 5px;
+    padding: 10px 15px;
+    font-size: 1em;
+    cursor: pointer;
+  }
+
+  #bn1{
+     background-color: red;
+
+  }
+  
+  #bn2{
+    background-color: blue;
+    
+  }
+
+  #bn3{
+    background-color: green;
+    
+  }
+
+  #bn4{
+    background-color: yellow;
+    
+  }
+
+  #bn5{
+    background-color: purple;
+     
+  }
+
+  #bn6{
+    background-color: orange;
+    
+  }

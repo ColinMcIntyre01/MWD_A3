@@ -1,29 +1,27 @@
 import React from "react";
-import Card from "./Card";
-import "./Deck.css";
 
-const Deck = ({deck, drawnCards, onPick, pickedCard})=>{
+const Deck = ({ deck, drawnCards, onPick, pickedCard }) => {
+  return (
+    <div className="deck-container">
+      {deck.length > 0 && <div className="deck">Deck</div>}
 
-return(
-<div className="deck-container">
- <div className="deck">
- {deck.length > 0 ? "Deck" : "No cards remaining"}
- </div>
- <div className="drawn-cards">
- {drawnCards.map((card, index) => (
-          <Card
+      <div className="drawn-cards">
+        {drawnCards.map((card, index) => (
+          <div
             key={index}
-            suit={card.suit}
-            value={card.value}
-            isPicked={pickedCard === card}
+            className="card"
             onClick={() => onPick(card)}
-          />
+            style={{
+              border: pickedCard === card ? "2px solid gold" : "2px solid black",
+            }}
+          >
+            <span className="card-value">{card.value}</span>
+            <span className="card-suit">{card.suit}</span>
+          </div>
         ))}
- </div>
-</div>
-);
-
-
-
+      </div>
+    </div>
+  );
 };
+
 export default Deck;
