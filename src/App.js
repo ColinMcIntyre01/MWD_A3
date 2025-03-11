@@ -20,11 +20,9 @@ const shuffleDeck = (deck) => {
 };
 
 function App() {
-
   const [deck, setDeck] = useState(createDeck());
   const [drawnCards, setDrawnCards] = useState([]); 
   const [pickedCard, setPickedCard] = useState(null);
-
 
   const handleDeal = (n) => {
     if (n > deck.length) {
@@ -65,21 +63,24 @@ function App() {
     }
   
     let randomCard;
-    do {
+    while (true) { 
       const randomSuit = suits[Math.floor(Math.random() * suits.length)];
       const randomValue = values[Math.floor(Math.random() * values.length)];
       randomCard = { suit: randomSuit, value: randomValue };
-    } while (drawnCards.some(c => c.suit === randomCard.suit && c.value === randomCard.value));
+  
+      if (!drawnCards.some((c) => c.suit === randomCard.suit && c.value === randomCard.value)) {
+        break; 
+      }
+    }
   
     setDrawnCards([...drawnCards, randomCard]);
   };
   
   const handlePick = (card) => {
     if (pickedCard) {
-      const updatedDrawnCards = drawnCards.map((c) =>
+      setDrawnCards(drawnCards.map((c) =>
         c === pickedCard ? card : c === card ? pickedCard : c
-      );
-      setDrawnCards(updatedDrawnCards);
+      ));
       setPickedCard(null);
     } else {
       setPickedCard(card);
@@ -87,9 +88,9 @@ function App() {
   };
   
   const handleRegroup = () => {
-    const shuffledDrawnCards = [...drawnCards].sort(() => Math.random() - 0.5);
-    setDrawnCards(shuffledDrawnCards);
+    setDrawnCards([...drawnCards].sort(() => Math.random() - 0.5));
   };
+  
   return (
     <div className="app">
       <h1>Cards App</h1>
