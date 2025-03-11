@@ -3,10 +3,10 @@
     height: 120px; 
     background: repeating-linear-gradient(
         45deg,
-        darkgray,
-        darkgray 10px,
-        gray 10px,
-        gray 20px
+        rgb(202, 17, 17),
+        rgb(247, 14, 14) 10px,
+        rgb(201, 9, 9) 10px,
+        rgb(161, 10, 10) 20px
     );
     margin: 20px auto; 
     display: flex;
@@ -14,7 +14,7 @@
     justify-content: center;
     cursor: pointer;
     font-weight: bold;
-    color: white;
+    color: rgb(59, 91, 100);
     border-radius: 8px;
     box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3);
     text-align: center;
@@ -29,7 +29,7 @@
     left: 4px;
     width: 76px;
     height: 116px;
-    background: darkgray;
+    background: rgb(0, 0, 0);
     border-radius: 8px;
     box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
