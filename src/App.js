@@ -10,76 +10,99 @@ const createDeck = () => {
   return suits.flatMap((suit) => values.map((value) => ({ suit, value })));
 };
 
+const shuffleDeck = (deck) => {
+  const shuffled = [...deck];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];  
+  }
+  return shuffled;
+};
+
 function App() {
- 
-const [deck, setDeck] = useState(createDeck());
-const [drawnCards, setDrawnCards] = useState([]); 
-const [pickedCard, setPickedCard] = useState(null);
 
+  const [deck, setDeck] = useState(createDeck());
+  const [drawnCards, setDrawnCards] = useState([]); 
+  const [pickedCard, setPickedCard] = useState(null);
 
-const handleDeal =(n) =>{
+  const logCardCounts = (updatedDeck, updatedDrawnCards) => {
+  };
 
-const newDeck = createDeck();
-setDeck(newDeck);
-const newCards = [];
-for (let i = 0; i < n; i++) {
-  const index = Math.floor(Math.random() * newDeck.length);
-  newCards.push(newDeck[index]);
-}
-setDrawnCards(newCards);
-};
+  const handleDeal = (n) => {
+   
 
-const handleReset = () => {
+    if (drawnCards.length + n > 52) {
+      alert("Cannot draw more than 52 cards!");
+      return;
+    }
 
-setDeck(createDeck());
-setDrawnCards([]);
-setPickedCard(null);
+    const shuffledDeck = shuffleDeck(deck);
+    const newDrawnCards = shuffledDeck.slice(0, n);
+    const remainingDeck = shuffledDeck.slice(n);
 
-};
+    setDeck(remainingDeck);
+    setDrawnCards([...drawnCards, ...newDrawnCards]);
+    logCardCounts(remainingDeck, [...drawnCards, ...newDrawnCards]);
+  };
 
-const handlePick = (card) => {
-  if (pickedCard) {
-    setDrawnCards(drawnCards.map((c) => (c === pickedCard ? card : c === card ? pickedCard : c)));
+  const handleReset = () => {
+    const newDeck = createDeck();
+    setDeck(newDeck);
+    setDrawnCards([]);
     setPickedCard(null);
-  } else {
-    setPickedCard(card);
-  }
-};
+    logCardCounts(newDeck, []);
+  };
 
-const handleToss = () => {
+  const handlePick = (card) => {
+    if (pickedCard) {
+      const updatedDrawnCards = drawnCards.map((c) => (c === pickedCard ? card : c === card ? pickedCard : c));
+      setDrawnCards(updatedDrawnCards);
+      setPickedCard(null);
+    } else {
+      setPickedCard(card);
+    }
+  };
 
-  if (pickedCard) {
-    setDrawnCards(drawnCards.filter((c) => c !== pickedCard));
-    setPickedCard(null);
-  }
-};
+  const handleToss = () => {
+    if (pickedCard) {
+      const updatedDrawnCards = drawnCards.filter((c) => c !== pickedCard);
+      setDrawnCards(updatedDrawnCards);
+      setPickedCard(null);
+      logCardCounts(deck, updatedDrawnCards);
+    }
+  };
 
-const handleRegroup = () => {
-  setDrawnCards([...drawnCards].sort(() => Math.random() - 0.5));
-};
+  const handleRegroup = () => {
+    const shuffledDrawnCards = [...drawnCards].sort(() => Math.random() - 0.5);
+    setDrawnCards(shuffledDrawnCards);
+  };
 
-const handleWildcard = () => {
-  const randomSuit = suits[Math.floor(Math.random() * suits.length)];
-  const randomValue = values[Math.floor(Math.random() * values.length)];
-  setDrawnCards([...drawnCards, { suit: randomSuit, value: randomValue }]);
-};
+  const handleWildcard = () => {
+    if (drawnCards.length >= 52) {
+      alert("Cannot add more than 52 cards!");
+      return;
+    }
 
-return(
-<div className="app">
-  <h1>Cards App</h1>
-  <Deck deck={deck} drawnCards={drawnCards} onPick={handlePick} pickedCard={pickedCard}/>
-  <Controls
-    deal={handleDeal}
-    reset={handleReset}
-    toss={handleToss}
-    regroup={handleRegroup}
-    addWildcard={handleWildcard}
-  />
+    const randomSuit = suits[Math.floor(Math.random() * suits.length)];
+    const randomValue = values[Math.floor(Math.random() * values.length)];
+    const updatedDrawnCards = [...drawnCards, { suit: randomSuit, value: randomValue }];
+    setDrawnCards(updatedDrawnCards);
+    logCardCounts(deck, updatedDrawnCards);
+  };
 
-</div>
-
-);
-
+  return (
+    <div className="app">
+      <h1>Cards App</h1>
+      <Deck deck={deck} drawnCards={drawnCards} onPick={handlePick} pickedCard={pickedCard} />
+      <Controls
+        deal={handleDeal}
+        reset={handleReset}
+        toss={handleToss}
+        regroup={handleRegroup}
+        addWildcard={handleWildcard}
+      />
+    </div>
+  );
 }
 
 export default App;
