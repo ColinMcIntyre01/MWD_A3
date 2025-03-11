@@ -25,71 +25,71 @@ function App() {
   const [drawnCards, setDrawnCards] = useState([]); 
   const [pickedCard, setPickedCard] = useState(null);
 
-  const logCardCounts = (updatedDeck, updatedDrawnCards) => {
-  };
 
   const handleDeal = (n) => {
-   
-
+    if (n > deck.length) {
+      alert("OUT OF CARDS!");
+      return;
+    }
+  
     if (drawnCards.length + n > 52) {
       alert("Cannot draw more than 52 cards!");
       return;
     }
-
+  
     const shuffledDeck = shuffleDeck(deck);
     const newDrawnCards = shuffledDeck.slice(0, n);
     const remainingDeck = shuffledDeck.slice(n);
-
+  
     setDeck(remainingDeck);
     setDrawnCards([...drawnCards, ...newDrawnCards]);
-    logCardCounts(remainingDeck, [...drawnCards, ...newDrawnCards]);
   };
-
+  
   const handleReset = () => {
-    const newDeck = createDeck();
-    setDeck(newDeck);
+    setDeck(createDeck());
     setDrawnCards([]);
     setPickedCard(null);
-    logCardCounts(newDeck, []);
   };
-
+  
+  const handleToss = () => {
+    if (pickedCard) {
+      setDrawnCards(drawnCards.filter((c) => c !== pickedCard));
+      setPickedCard(null);
+    }
+  };
+  
+  const handleWildcard = () => {
+    if (drawnCards.length >= 52) {
+      alert("Cannot add more than 52 cards!");
+      return;
+    }
+  
+    let randomCard;
+    do {
+      const randomSuit = suits[Math.floor(Math.random() * suits.length)];
+      const randomValue = values[Math.floor(Math.random() * values.length)];
+      randomCard = { suit: randomSuit, value: randomValue };
+    } while (drawnCards.some(c => c.suit === randomCard.suit && c.value === randomCard.value));
+  
+    setDrawnCards([...drawnCards, randomCard]);
+  };
+  
   const handlePick = (card) => {
     if (pickedCard) {
-      const updatedDrawnCards = drawnCards.map((c) => (c === pickedCard ? card : c === card ? pickedCard : c));
+      const updatedDrawnCards = drawnCards.map((c) =>
+        c === pickedCard ? card : c === card ? pickedCard : c
+      );
       setDrawnCards(updatedDrawnCards);
       setPickedCard(null);
     } else {
       setPickedCard(card);
     }
   };
-
-  const handleToss = () => {
-    if (pickedCard) {
-      const updatedDrawnCards = drawnCards.filter((c) => c !== pickedCard);
-      setDrawnCards(updatedDrawnCards);
-      setPickedCard(null);
-      logCardCounts(deck, updatedDrawnCards);
-    }
-  };
-
+  
   const handleRegroup = () => {
     const shuffledDrawnCards = [...drawnCards].sort(() => Math.random() - 0.5);
     setDrawnCards(shuffledDrawnCards);
   };
-
-  const handleWildcard = () => {
-    if (drawnCards.length >= 52) {
-      alert("Cannot add more than 52 cards!");
-      return;
-    }
-
-    const randomSuit = suits[Math.floor(Math.random() * suits.length)];
-    const randomValue = values[Math.floor(Math.random() * values.length)];
-    const updatedDrawnCards = [...drawnCards, { suit: randomSuit, value: randomValue }];
-    setDrawnCards(updatedDrawnCards);
-    logCardCounts(deck, updatedDrawnCards);
-  };
-
   return (
     <div className="app">
       <h1>Cards App</h1>
