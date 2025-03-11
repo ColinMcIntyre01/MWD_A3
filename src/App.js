@@ -38,6 +38,19 @@ setPickedCard(null);
 };
 
 
+const handleToss = () => {
+
+  if (pickedCard) {
+    setDrawnCards(drawnCards.filter((c) => c !== pickedCard));
+    setPickedCard(null);
+  }
+};
+
+const handleRegroup = () => {
+  setDrawnCards([...drawnCards].sort(() => Math.random() - 0.5));
+};
+
+
 }
 
 export default App;
