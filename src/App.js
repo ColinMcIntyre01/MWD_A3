@@ -50,6 +50,11 @@ const handleRegroup = () => {
   setDrawnCards([...drawnCards].sort(() => Math.random() - 0.5));
 };
 
+const handleWildcard = () => {
+  const randomSuit = suits[Math.floor(Math.random() * suits.length)];
+  const randomValue = values[Math.floor(Math.random() * values.length)];
+  setDrawnCards([...drawnCards, { suit: randomSuit, value: randomValue }]);
+};
 
 }
 
