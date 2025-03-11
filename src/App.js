@@ -13,7 +13,7 @@ const createDeck = () => {
 function App() {
  
 const [deck, setDeck] = useState(createDeck());
-const [drawnCards, setDrawnCards] = useState([]);
+const [drawnCards, setDrawnCards] = useState([]); 
 const [pickedCard, setPickedCard] = useState(null);
 
 
@@ -32,7 +32,7 @@ setDrawnCards(newCards);
 const handleReset = () => {
 
 setDeck(createDeck());
-setDrawnCards({});
+setDrawnCards([]);
 setPickedCard(null);
 
 };
@@ -45,8 +45,6 @@ const handlePick = (card) => {
     setPickedCard(card);
   }
 };
-
-
 
 const handleToss = () => {
 
