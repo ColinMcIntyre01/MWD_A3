@@ -1,43 +1,251 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#000000" />
-    <meta
-      name="description"
-      content="Web site created using create-react-app"
-    />
-    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
-    <!--
-      manifest.json provides metadata used when your web app is installed on a
-      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
-    -->
-    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-    <!--
-      Notice the use of %PUBLIC_URL% in the tags above.
-      It will be replaced with the URL of the `public` folder during the build.
-      Only files inside the `public` folder can be referenced from the HTML.
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cards App</title>
+    <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        body {
+            background-color: gold;
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
 
-      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
-      work correctly both with client-side routing and a non-root public URL.
-      Learn how to configure a non-root public URL by running `npm run build`.
-    -->
-    <title>React App</title>
-  </head>
-  <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
+        .deck-wrapper {
+            position: relative;
+            display: inline-block;
+            margin: 20px;
+        }
+
+        .deck {
+    width: 80px;  
+    height: 120px; 
+    background: red;
+    margin: 20px auto 30px; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: white;
+    border-radius: 8px;
+    box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    font-size: 1.2em;
+ }
+ 
+ .deck::after {
+    content: "";
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    width: 80px;
+    height: 120px;
+    background: black;
+    border-radius: 8px;
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    z-index: -1;
+} 
+
+        .deck-red {
+            background-color: red;
+            border: 2px solid black;
+            transform: rotate(-10deg);
+            z-index: 1;
+        }
+
+        .deck-black {
+            background-color: black;
+            border: 2px solid white;
+            transform: rotate(5deg);
+            z-index: 2;
+            top: -10px;
+            left: 10px;
+        }
+
+        .deck-container {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr); 
+            gap: 15px;
+            max-width: 80%;
+            margin: 20px auto;
+        }
+
+        .card {
+            width: 100px;
+            height: 140px;
+            border: 2px solid black;
+            background: white;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.5em;
+            box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3);
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+
+        .card:hover {
+            transform: scale(1.1);
+            box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .controls {
+            margin: 20px;
+        }
+
+        .controls button {
+            border: 2px solid rgb(255, 255, 255);
+            padding: 10px 15px;
+            margin: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        
+        .deal5 { background-color:red; }
+        .deal7 { background-color: blue; }
+        .reset { background-color: green; }
+        .toss { background-color: yellow; }
+        .regroup { background-color: purple; }
+        .wildcard { background-color: orange; }
+    </style>
+</head>
+<body>
+    <h1>Cards App</h1>
+
+    <div class="deck-wrapper">
+        <div class="deck deck-red"></div>
+    </div>
+
     <div id="root"></div>
-    <!--
-      This HTML file is a template.
-      If you open it directly in the browser, you will see an empty page.
 
-      You can add webfonts, meta tags, or analytics to this file.
-      The build step will place the bundled scripts into the <body> tag.
+    <script type="text/babel">
+        const { useState } = React;
 
-      To begin the development, run `npm start` or `yarn start`.
-      To create a production bundle, use `npm run build` or `yarn build`.
-    -->
-  </body>
+        function createDeck() {
+            const suits = ["♠", "♥", "♦", "♣"];
+            const values = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
+            return suits.flatMap(suit => values.map(value => ({ suit, value })));
+        }
+
+        function shuffleDeck(deck) {
+            return [...deck].sort(() => Math.random() - 0.5);
+        }
+
+        function Card({ card, onClick, isSelected }) {
+            return (
+                <div className="card" onClick={() => onClick(card)} style={{ borderColor: isSelected ? "red" : "black" }}>
+                    {card.value}{card.suit}
+                </div>
+            );
+        }
+
+        function Deck({ drawnCards, onPick, pickedCard }) {
+            return (
+                <div>
+                    <div className="deck-container">
+                        {drawnCards.map((card, index) => (
+                            <div
+                                key={index}
+                                className="card"
+                                onClick={() => onPick(card)}
+                                style={{
+                                    borderColor: card === pickedCard ? "red" : "black",
+                                }}
+                            >
+                                {card.value}{card.suit}
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            );
+        }
+
+        function Controls({ deal, reset, toss, regroup, addWildcard }) {
+            return (
+                <div className="controls">
+                    <button className="deal5" onClick={() => deal(5)}>Deal 5 Cards</button>
+                    <button className="deal7" onClick={() => deal(7)}>Deal 7 Cards</button>
+                    <button className="reset" onClick={reset}>Reset</button>
+                    <button className="toss" onClick={toss}>Toss</button>
+                    <button className="regroup" onClick={regroup}>Regroup</button>
+                    <button className="wildcard" onClick={addWildcard}>Add Wildcard</button>
+                </div>
+            );
+        }
+
+        function App() {
+            const [deck, setDeck] = useState(createDeck());
+            const [drawnCards, setDrawnCards] = useState([]); 
+            const [pickedCard, setPickedCard] = useState(null);
+
+            const handleDeal = (n) => {
+                if (deck.length < n) {
+                    alert("OUT OF CARDS!");
+                    return;
+                }
+                const shuffledDeck = shuffleDeck(deck);
+                const newDrawnCards = shuffledDeck.slice(0, n);
+                setDeck(deck.slice(n));
+                setDrawnCards([...drawnCards, ...newDrawnCards]);
+            };
+
+            const handleReset = () => {
+                setDeck(createDeck());
+                setDrawnCards([]);
+                setPickedCard(null);
+            };
+
+            const handleToss = () => {
+                if (pickedCard) {
+                    setDrawnCards(drawnCards.filter((c) => c !== pickedCard));
+                    setPickedCard(null);
+                }
+            };
+
+            const handleWildcard = () => {
+                if (drawnCards.length >= 52) {
+                    alert("Cannot add more than 52 cards!");
+                    return;
+                }
+                const suits = ["♠", "♥", "♦", "♣"];
+                const values = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
+                let randomCard;
+                do {
+                    const randomSuit = suits[Math.floor(Math.random() * suits.length)];
+                    const randomValue = values[Math.floor(Math.random() * values.length)];
+                    randomCard = { suit: randomSuit, value: randomValue };
+                } while (drawnCards.some((c) => c.suit === randomCard.suit && c.value === randomCard.value));
+                setDrawnCards([...drawnCards, randomCard]);
+            };
+
+            const handlePick = (card) => {
+                setPickedCard(card === pickedCard ? null : card);
+            };
+
+            const handleRegroup = () => {
+                setDrawnCards([...drawnCards].sort(() => Math.random() - 0.5));
+            };
+
+            return (
+                <div>
+                    <Deck drawnCards={drawnCards} onPick={handlePick} pickedCard={pickedCard} />
+                    <Controls
+                        deal={handleDeal}
+                        reset={handleReset}
+                        toss={handleToss}
+                        regroup={handleRegroup}
+                        addWildcard={handleWildcard}
+                    />
+                </div>
+            );
+        }
+
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
+
 </html>
